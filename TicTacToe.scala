@@ -49,7 +49,7 @@
     var valid = false;
     var taken = false;
 
-    while(!valid || (!replacement && taken)){
+    while(!valid || (!replacement && taken)){ // only accept a valid cell. If replacement is disabled, ensure it is free
       println("Please enter row and column")
       println("Row:")
       r = readInt-1
@@ -65,18 +65,19 @@
   }
 
 
-  /** Check if given move wins the game for the given player */
+  /** Check if given move (r,c)  wins the game for the given player */
   def wins(r:Int,c:Int,player:Int):Boolean = {
 
-    lazy val otherXs = a.filter(_!=r)
-    lazy val otherYs = a.filter(_!=c)
-    lazy val lineFull = otherXs.forall(other => board(other)(c)==player)
-    lazy val colFull  = otherYs.forall(other => board(r)(other)==player)
-    lazy val diagFull = (r==c) &&
-      (otherXs.forall(other => board(other)(other)== player)
-        || (otherXs.forall(other => board(other)(2-other) ==player)))
+    lazy val otherXs = a.filter(_!=r) // rows not occupied by this move
+    lazy val otherYs = a.filter(_!=c) // cols not occupied by this move
+    lazy val colFull = otherXs.forall( // victory condition 1: are all other Xs...
+      other => board(other)(c)==player)  // ...in this column taken by this player? 
+    lazy val lineFull  = otherYs.forall(other => board(r)(other)==player) // VC 2: same thing, now for this row
+    lazy val diagFull = (r==c) && // VC 3: check only if this cell is in a diagonal 
+      (otherXs.forall(other => board(other)(other)== player) // VC for diagonal 1: cells with the same r and c
+        || (otherXs.forall(other => board(other)(2-other) ==player))) // VC for diagonal 2: cells whose r & c add to 2
     
-    lineFull || colFull || diagFull
+    colFull || lineFull || diagFull //check and return if any of the victory conditions is met
   }
 
   /** get move from human player 2 */
