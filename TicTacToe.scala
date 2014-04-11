@@ -68,14 +68,14 @@
   /** Check if given move (r,c)  wins the game for the given player */
   def wins(r:Int,c:Int,player:Int):Boolean = {
 
-    lazy val otherXs = a.filter(_!=r) // rows not occupied by this move
-    lazy val otherYs = a.filter(_!=c) // cols not occupied by this move
-    lazy val colFull = otherXs.forall( // victory condition 1: are all other Xs...
+    lazy val otherRs = a.filter(_!=r) // rows not occupied by this move
+    lazy val otherCs = a.filter(_!=c) // cols not occupied by this move
+    lazy val colFull = otherRs.forall( // victory condition 1: are all other Rs...
       other => board(other)(c)==player)  // ...in this column taken by this player? 
-    lazy val lineFull  = otherYs.forall(other => board(r)(other)==player) // VC 2: same thing, now for this row
-    lazy val diagFull = (r==c) && // VC 3: check only if this cell is in a diagonal 
-      (otherXs.forall(other => board(other)(other)== player) // VC for diagonal 1: cells with the same r and c
-        || (otherXs.forall(other => board(other)(2-other) ==player))) // VC for diagonal 2: cells whose r & c add to 2
+    lazy val lineFull  = otherCs.forall(other => board(r)(other)==player) // VC 2: same thing, now for this row
+    lazy val diagFull = (r==c) && // VC 3: check the VC only if this cell is in a diagonal 
+      (otherRs.forall(other => board(other)(other)== player) // VC for diagonal 1: cells with the same r and c
+        || (otherRs.forall(other => board(other)(2-other) ==player))) // VC for diagonal 2: cells whose r & c add to 2
     
     colFull || lineFull || diagFull //check and return if any of the victory conditions is met
   }
@@ -121,19 +121,20 @@
     */
   def showBoard(){
     print("\n\n\n")
+    //13 by 13 (1/90HD!) repr of the board; j 13 is for newlines
     for(i <- 0 to 12; j <- 0 to 13) {
       val row = i/4
       val col = j/4
-      val centerTile = (i-2)%4==0 && (j-2)%4==0
+      val centerTile = (i-2)%4==0 && (j-2)%4==0 // central tile in the drawing
       if(j==13){
         print("\n")
-      }else if  (i%4 ==0 || j%4 ==0) {
+      }else if  (i%4 ==0 || j%4 ==0) { // # for cell borders
         print ("#")
       }else if (centerTile && board(row)(col) == 1){
         print("X")
       }else if (centerTile &&  board(row)(col) == 2){  
         print("O")
-      }else print(" ")
+      }else print(" ") // fill the rest with whitespace
 
     }
   
