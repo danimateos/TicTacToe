@@ -31,7 +31,7 @@
       showBoard
     }
    
-    if(!finished && boardIsFull){
+    if(!finished && isBoardFull){
       println("There was a tie!")
       finished = true
     }
@@ -110,7 +110,7 @@
   }
 
   /** self expl */
-  def boardIsFull() = {
+  def isBoardFull() = {
     board.flatten.forall(_!=0)  
   }
 
